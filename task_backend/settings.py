@@ -19,7 +19,7 @@ else:
     from .settings_dev import *
 
 # ✅ FIX: This line was incorrect — don't assign to ALLOWED_HOSTS twice
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = ['django-task-backend.onrender.com', 'localhost', '127.0.0.1']
 
 # ❌ REMOVE THIS LINE — it's invalid Python (caused your app to crash)
 # DJANGO_ALLOWED_HOSTS = django-task-backend.onrender.com

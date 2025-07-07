@@ -10,16 +10,20 @@ class JWTMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-
         token = request.headers.get('Authorization', '').split(' ')[-1]
 
         base_not_protected_route = '/api/v1/users/'
-        not_protected_routes = [base_not_protected_route +
-                                'login', base_not_protected_route+'signup', base_not_protected_route+'refresh-token','/api/v1/swagger'] # list for unprotected routes. I.E login, signup, api docs
+        not_protected_routes = [
+            '/',
+            base_not_protected_route + 'login',
+            base_not_protected_route + 'signup',
+            base_not_protected_route + 'refresh-token',
+            '/api/v1/swagger'
+        ]
 
+        # Exempt admin panel and unprotected routes
         if request.path in not_protected_routes or request.path.startswith(reverse('admin:index')):
-            response = self.get_response(request)
-            return response
+            return self.get_response(request)
 
         if not token:
             return JsonResponse({'error': 'token missing'}, status=401)
@@ -35,5 +39,4 @@ class JWTMiddleware:
         except jwt.InvalidTokenError:
             return JsonResponse({'error': 'invalid token'}, status=401)
 
-        response = self.get_response(request)
-        return response
+        return self.get_response(request)
